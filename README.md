@@ -20,11 +20,13 @@ A robust, console-based **Clinic Management System** developed in C. This projec
 ---
 
 ## 📁 Project Structure
+
+```text
 ├── STD.h           # Standard types definitions
 ├── C_interface.h   # Function prototypes, macros, and structures
 ├── C_Program.c     # Core logic and function implementations
 └── C_main.c        # Main entry point and menu navigation
-
+```
 ---
 
 ## 🛠️ Build and Run
