@@ -1,24 +1,45 @@
+/**
+ * @file C_Program.c
+ * @brief Implementation of Clinic Management System core logic and data structures.
+ * @author Mazen Mohammed
+ * @date 2026
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include "STD.h"
 #include <stdbool.h>
 #include <string.h>
 #include "C_interface.h"
+
+/**
+ * @struct Patient_Data
+ * @brief Data structure storing individual patient details.
+ */
 typedef struct {
-    u8 name[50];
-    u8 gender[10];
-    u32 age;
-    u32 ID;
+    u8 name[50];     /**< Full name of the patient */
+    u8 gender[10];   /**< Gender description */
+    u32 age;         /**< Patient age in years */
+    u32 ID;          /**< Unique system ID assigned to patient */
 } Patient_Data;
 
-
+/**
+ * @struct Patient
+ * @brief Node representation for singly linked list of patients.
+ */
 struct Patient {
-    Patient_Data data;
-    struct Patient* next;
+    Patient_Data data;       /**< Embedded patient data payload */
+    struct Patient* next;    /**< Pointer to the next node in linked list */
 };
 
-
-struct Patient*  ID_search(struct Patient* head, u32 id){
+/**
+ * @brief Linearly searches the linked list for a matching patient ID.
+ * 
+ * @param head Pointer to linked list head.
+ * @param id Target ID.
+ * @return struct Patient* Pointer to matching node or NULL.
+ */
+struct Patient* ID_search(struct Patient* head, u32 id){
     struct Patient* current = head;
     while(current != NULL){
         if(current->data.ID == id){ 
@@ -30,11 +51,16 @@ struct Patient*  ID_search(struct Patient* head, u32 id){
     return NULL;
 }
 
-
+/**
+ * @brief Creates and appends a new patient node to the list.
+ * 
+ * @param head Double pointer to linked list head.
+ */
 void Add_Patient(struct Patient** head){
     struct Patient* new = (struct Patient*)malloc(sizeof(struct Patient));
     printf("Enter patient ID: ");
     scanf("%lu", &new->data.ID);
+    
     if(ID_search(*head, new->data.ID)){
         printf("Patient with this ID already exists.\n");
         free(new);
@@ -64,7 +90,11 @@ void Add_Patient(struct Patient** head){
 
  }
 
-
+/**
+ * @brief Fetches and outputs patient record attributes.
+ * 
+ * @param head Pointer to linked list head.
+ */
 void View_Patient(struct Patient* head){
 	u32 entered_id;
 	if(head==NULL){
@@ -82,7 +112,11 @@ void View_Patient(struct Patient* head){
 	
 }
 
-
+/**
+ * @brief Admin authentication loop.
+ * 
+ * @return u8 Returns 1 if valid password provided within 3 attempts, else 0.
+ */
 u8 password(){
 	u32 password=1234;
 	u32 Entered_password;
@@ -104,7 +138,11 @@ u8 password(){
 		}
 }
 
-
+/**
+ * @brief Modifies details for a patient identified by ID.
+ * 
+ * @param head Pointer to linked list head.
+ */
 void Edit_Patient(struct Patient* head){
 	if(head==NULL){
 		printf("\nThere is no patients to edit\n");
@@ -133,15 +171,24 @@ void Edit_Patient(struct Patient* head){
 
 //===============================================
 
+/**
+ * @struct reservation
+ * @brief Data structure representing individual appointment time slots.
+ */
 typedef struct {
-	u8 time[20];
-	u8 stat;
-	u32 id;
+	u8 time[20];   /**< String representation of time interval */
+	u8 stat;       /**< Status flag: 0 = Available, 1 = Reserved */
+	u32 id;        /**< Patient ID linked to reservation */
 }reservation;
 
+/**
+ * @brief Fixed size collection of daily reservation slots.
+ */
 reservation slots[5];
 
-
+/**
+ * @brief Sets default time strings and clears reservation states.
+ */
 void reservation_Init(){
 
 strcpy(slots[0].time,"2pm to 2:30pm");
@@ -156,7 +203,11 @@ for(u8 i=0;i<5;i++){
 	}
 }
 
-
+/**
+ * @brief Assigns an available slot to a patient.
+ * 
+ * @param head Pointer to linked list head.
+ */
 void reserve_slot(struct Patient* head){
 	u32 entered_id;
 	printf("\nEnter the id to reserve : ");
@@ -192,7 +243,11 @@ void reserve_slot(struct Patient* head){
 	printf("\nReservation done !\n");
 }
 
-
+/**
+ * @brief Releases a slot held by a specific patient ID.
+ * 
+ * @param head Pointer to linked list head.
+ */
 void cancel_reserve(struct Patient* head){
 	u32 avail=0;
 	for(u32 i=0;i<5;i++){
@@ -227,7 +282,9 @@ void cancel_reserve(struct Patient* head){
 
 }
 
-
+/**
+ * @brief Displays overview of all slots and their status/assigned IDs.
+ */
 void View_Reservations(){
 	printf("\n==============today's reservations ==============\n");
 	for(u32 i=0; i<5;i++){
@@ -244,7 +301,11 @@ void View_Reservations(){
 	
 }
 
-
+/**
+ * @brief Traverses linked list and frees all allocated nodes.
+ * 
+ * @param head Pointer to linked list head.
+ */
 void free_space(struct Patient* head){
 	struct Patient* temp;
 	while(head!=NULL){
